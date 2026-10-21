@@ -1,0 +1,36 @@
+name: Daily site scan
+
+on:
+  schedule:
+    - cron: "45 11 * * *"   # 11:45 UTC = 06:45 Medellín (before the Grok task at 7:00)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: site-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: python run.py
+      - name: Commit dashboard + ledger
+        run: |
+          git config user.name  "smash-site-finder-bot"
+          git config user.email "actions@github.com"
+          git add docs/ data/ || true
+          if git diff --staged --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Daily scan: update dashboard + seen ledger [skip ci]"
+            git push
+          fi

@@ -1,0 +1,135 @@
+# ===========================================================================
+# Smash Wellness Club — Site Finder configuration
+# Commercial spaces in Medellín that could hold the club. Tune here, no code.
+# ===========================================================================
+
+# ---- HARD FILTERS (deal-breakers) -----------------------------------------
+hard:
+  min_area_m2: 500              # built/usable m². Must-have program + circulation
+  max_area_m2: 1200             # ~the full wishlist without paying for dead space
+
+  # RENT cap, enforced on the ALL-IN monthly number:
+  #   canon × 1.19 (IVA, unless the listing says IVA incluido) + administración
+  # Commercial rent in Colombia carries 19% IVA and portals list it pre-IVA.
+  # Cra 47B proves it: listed 50M "+ IVA" = the 59.5M we'd been calling canon.
+  max_all_in_cop: 45000000
+  iva_rate: 0.19
+
+  # SALE (venta) listings have no price cap — they're a buy / landlord-partner
+  # angle, ranked on price per m². Set a number here to cap them too.
+  max_sale_cop: null
+
+  # COMMERCIAL ONLY. Casas pass only if the listing states commercial/mixed use;
+  # edificios with residential markers (apartments, Airbnb) need a commercial one.
+  include_types: ["local", "bodega", "casa", "edificio"]
+  include_deals: ["arriendo", "venta"]
+  allowed_cities: ["medellin", "envigado"]
+
+fx_cop_per_usd: 3900            # display only
+
+# ---- BENCHMARK ------------------------------------------------------------
+# Cra 47B #17A Sur — the current lead. Pinned on the board (from data/manual.yaml)
+# and used as the yardstick for price per m².
+benchmark:
+  label: "Cra 47B #17A Sur"
+  all_in_cop: 59500000          # 50M + IVA
+  total_m2: 740                 # 490 enclosed + 250 rooftop terraces
+  enclosed_m2: 490
+
+# ---- TARGET AREAS ---------------------------------------------------------
+# Listings are matched to an area by accent-stripped tokens in neighborhood+city.
+# First match wins, so the narrow Manila/Provenza area is listed before Poblado.
+# Upper Las Palmas corridor deliberately excluded (roadmap: walkable, dodge it).
+areas:
+  manila_provenza:
+    label: "Manila / Provenza"
+    tokens: ["manila", "provenza", "astorga", "lalinde", "linde", "villa carlota", "patio bonito"]
+  ciudad_del_rio:
+    label: "Ciudad del Río"
+    tokens: ["ciudad del rio", "barrio colombia"]
+  poblado:
+    label: "El Poblado"
+    tokens: ["poblado", "tesoro", "balsos", "castropol", "san lucas", "alejandria",
+             "aguacatala", "santa maria de los angeles", "los naranjos", "la florida",
+             "oviedo", "los mangos", "el diamante", "altos del poblado", "las lomas",
+             "loma de los parra", "la asomadera", "el castillo", "los mangos"]
+  envigado:
+    label: "Envigado"
+    tokens: ["envigado", "zuniga", "loma del esmeraldal", "el dorado", "la paz",
+             "milan vallejuelos", "jardines", "alcala", "el portal", "zona centro",
+             "las vegas", "la magnolia", "otraparte", "el chocho", "san marcos",
+             "la frontera", "camino verde", "la sebastiana", "las antillas"]
+
+# Any listing whose barrio matches one of these is dropped, whatever the area.
+# Upper Vía Las Palmas: not walkable, the roadmap says dodge it.
+exclude_tokens: ["las palmas", "via las palmas", "alto de las palmas", "palmas"]
+
+# ---- SCORING: how well a space fits the Smash program ----------------------
+# Matched against title + description + amenities (accent-stripped), WHOLE WORDS.
+# "word*" = stem/prefix match (trifasic* hits trifasica). "re:..." = raw regex.
+# Total is capped at 100. Computed rules (no keyword list) are marked.
+scoring:
+  ground_floor_street:  {points: 12, any: ["primer piso", "a la calle", "frente a la calle", "esquinero", "esquina", "fachada", "vitrina", "nivel de calle", "doble frente"], flag: "Street-level / frontage"}
+  rooftop_terrace:      {points: 12, any: ["terraza", "rooftop", "azotea", "terrazas", "zona exterior"], flag: "Terrace / rooftop"}
+  elevator:             {points: 10, any: ["ascensor", "elevador"], flag: "Elevator (Ley 361)"}
+  # "cocina" alone is useless (every house has one) — only F&B-grade signals
+  # "re:" = regex. Singular restaurante only: Fincaraíz's "Restaurantes" amenity = nearby, not on-site
+  food_ready:           {points: 10, any: ["re:\\brestaurante\\b(?!s)", "cocina industrial", "trampa de grasa", "extraccion", "campana extractora", "gastronom*", "apto para comidas", "re:\\bbar\\b(?! y closet)"], flag: "Kitchen / F&B-ready"}
+  # permitted-use signals; generic "servicios" dropped (matches servicios públicos)
+  use_permits:          {points: 10, any: ["uso de suelo", "uso comercial", "uso mixto", "licencia de funcionamiento", "zona comercial", "gimnasio", "centro de bienestar", "spa", "centro medico"], flag: "Use / permits mentioned"}
+  power:                {points: 8,  any: ["trifasic*", "transformador", "subestacion", "kva", "planta electrica"], flag: "3-phase / heavy power"}
+  high_ceiling:         {points: 8,  any: ["doble altura", "altura libre", "techos altos", "mezzanine", "mezanine", "altura de"], flag: "Double height / high ceiling"}
+  open_plan:            {points: 6,  any: ["planta libre", "espacio abierto", "sin columnas", "diafano", "amplio espacio", "luz natural", "iluminado"], flag: "Open plan / light"}
+  parking:              {points: 8,  any: [], flag: "Parking 4+"}                 # computed: garages >= 4 or text
+  whole_building:       {points: 6,  any: ["edificio completo", "edificio comercial", "casa comercial", "varios niveles", "3 niveles", "tres niveles", "dos niveles", "2 niveles"], flag: "Whole / independent building"}
+  green_view:           {points: 5,  any: ["parque", "zona verde", "arboles", "naturaleza", "quebrada", "vista al parque", "vista a la ciudad"], flag: "Green / view"}
+  traffic:              {points: 5,  any: ["alto trafico", "alto flujo", "via principal", "avenida", "corredor", "zona rosa", "milla de oro"], flag: "High-traffic location"}
+  value_vs_benchmark:   {points: 10, any: [], flag: "≥25% cheaper per m² than Cra 47B"}  # computed
+
+# ---- SCRAPE SOURCES -------------------------------------------------------
+# Paths are probed and working as of 2026-10-21.
+sources:
+  fincaraiz:
+    enabled: true
+    max_pages: 8                 # 21/page. The m2-desde filter keeps this small.
+    # {deal}/{type}/{location}/m2-desde-450 — 450 not 500 so near-misses are seen
+    searches:
+      - "arriendo/locales/el-poblado/suroriente/medellin/m2-desde-450"
+      - "arriendo/bodegas/el-poblado/suroriente/medellin/m2-desde-450"
+      - "arriendo/casas/el-poblado/suroriente/medellin/m2-desde-450"
+      - "arriendo/edificios/el-poblado/suroriente/medellin"
+      - "arriendo/locales/manila/suroriente/medellin/m2-desde-450"
+      - "arriendo/locales/provenza/suroriente/medellin/m2-desde-450"
+      - "arriendo/locales/ciudad-del-rio/suroriente/medellin/m2-desde-450"
+      - "arriendo/bodegas/ciudad-del-rio/suroriente/medellin/m2-desde-450"
+      - "arriendo/locales/envigado/antioquia/m2-desde-450"
+      - "arriendo/bodegas/envigado/antioquia/m2-desde-450"
+      - "arriendo/casas/envigado/antioquia/m2-desde-450"
+      - "arriendo/edificios/envigado/antioquia"
+      - "venta/edificios/el-poblado/suroriente/medellin/m2-desde-450"
+      - "venta/edificios/envigado/antioquia/m2-desde-450"
+  metrocuadrado:
+    enabled: true
+    max_pages: 20                # 50/page, no working size filter -> crawl all
+    searches:
+      - "locales/arriendo/medellin/el-poblado/"
+      - "bodegas/arriendo/medellin/el-poblado/"
+      - "locales/arriendo/medellin/ciudad-del-rio/"
+      - "locales/arriendo/envigado/"
+      - "bodegas/arriendo/envigado/"
+  ciencuadras:
+    enabled: true
+    max_pages: 50                # 20/page, no size filter -> list m² pre-filter
+    searches:
+      - "arriendo/locales/medellin/el-poblado"
+      - "arriendo/bodegas/medellin/el-poblado"
+      - "arriendo/casas/medellin/el-poblado"
+      - "arriendo/edificios/medellin"
+      - "arriendo/locales/envigado"
+      - "arriendo/bodegas/envigado"
+      - "venta/edificios/medellin"
+  manual:
+    enabled: true                # data/manual.yaml — Lobbie pages, agent links, etc.
+
+output:
+  dashboard_title: "Smash Wellness Club — Site Finder"

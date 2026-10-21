@@ -1,0 +1,14 @@
+# Links you were sent — Lobbie pages, agent sites, WhatsApp shares.
+# Add one entry per URL; the next run pulls it onto the board.
+# `set:` overrides anything the parser got wrong or couldn't see.
+
+- url: https://app.lobbieapp.com/inmueble/1hGm
+  label: "Cra 47B #17A Sur — current lead"
+  benchmark: true
+  note: "L1 257 m² + terrazas at 30M + IVA · L2 232 m² + rooftop ~250 m² at 20M + IVA · rentable whole or by level · no elevator"
+  set:
+    address: "Cra 47B #17A Sur, Santa María de los Ángeles"
+    neighborhood: "Santa María de los Ángeles"
+    property_type: "edificio"
+    area_m2: 740
+    iva_included: false
