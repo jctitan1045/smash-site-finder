@@ -20,3 +20,9 @@
   statement (casa comercial / uso comercial / uso mixto / alta mixtura / para empresa); surroundings
   ("cerca a hoteles", "Locales comerciales" amenity, "2 oficinas") don't count. Residential edificios
   (apartments/Airbnb) fail unless a commercial marker is present. 259 → 140 matches.
+- Jordan: NO HOUSES at all (casa type + casa searches removed). Then: drop spaces that clearly
+  can't host sauna/plunges. Rule = explicit evidence only (no water/baño, offices/storage-only,
+  use bans, mini-bodega/kiosk, inside a mall); removed 0 today since listings never say so. Upper
+  floor 3+ (15) and basement (8) = warnings. Portal "0 bathrooms" = missing field (Provenza bldg
+  "0" lists 13 baños), so never used. Showers/plumbing/drains = +8. Itagüí/Sabaneta/La Estrella
+  excluded (2 Itagüí leaked). CI fix: pull --rebase -X theirs before push. Board: 122 + 15.

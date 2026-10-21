@@ -14,7 +14,9 @@ Smash Wellness Club is a multi-level social wellness club: a public restaurant a
 - **Rent cap:** 45,000,000 COP/month ALL-IN. All-in = canon × 1.19 (19% IVA on commercial rent) + administración. Portals usually list canon before IVA, so a listing at 38M is really about 45.2M. If the listing says "IVA incluido", don't add IVA. Always show your all-in math.
 - **For sale:** whole buildings (edificios) for sale have no price cap. Report price and price per m².
 - **Areas:** El Poblado (including Manila, Provenza, Astorga, Lalinde, Castropol, Patio Bonito, El Tesoro, Los Balsos, Aguacatala, Santa María de los Ángeles), Ciudad del Río / Barrio Colombia, Envigado. NOT Laureles. NOT the upper Vía Las Palmas corridor.
-- **COMMERCIAL SPACES ONLY, never residential.** Types: locales, bodegas, commercial buildings (office/retail, hotels, mixed-use). A house counts only if the listing itself says "casa comercial", "uso comercial" or "uso mixto". Skip residential houses, apartments, apartment buildings and Airbnb portfolios, even if they're big. Being "near" commercial zones doesn't make a space commercial.
+- **COMMERCIAL SPACES ONLY, never residential, and NO HOUSES at all.** Types: locales, bodegas, commercial buildings (office/retail, hotels, mixed-use). Skip every casa, even ones listed as "casa comercial", plus apartments, apartment buildings and Airbnb portfolios. Being "near" commercial zones doesn't make a space commercial.
+- **Must be able to take saunas and cold plunges (water + drainage + heat).** Skip spaces that clearly can't: no bathroom or water points, "solo oficinas"/storage-only or a ban on restaurants, mini-bodegas, kiosks, and units inside a shopping mall. Flag (don't skip) upper floors 3+ and basements, since drainage and slab load need checking. Mention existing showers, plumbing points, drains or grease traps as a plus.
+- **Areas exclude Itagüí, Sabaneta and La Estrella**, even when the portal files them under Envigado.
 
 ## What makes a site score higher (mention which apply)
 Street-level frontage or a corner · terrace or rooftop · elevator (multi-level venues need one for accessibility under Ley 361) · existing kitchen, grease trap or extraction (ex-restaurant) · uso de suelo or licence mentioning gimnasio, spa, restaurante or servicios · 3-phase power or a transformer (saunas draw 30–60 kW) · double height · open plan and natural light · parking for 4+ cars · whole or independent building · near a park or greenery · high-traffic street.
@@ -28,14 +30,12 @@ These URLs are verified to work. Open each, read the results, and apply the crit
 Fincaraíz (already filtered to 450 m²+):
 - https://www.fincaraiz.com.co/arriendo/locales/el-poblado/suroriente/medellin/m2-desde-450
 - https://www.fincaraiz.com.co/arriendo/bodegas/el-poblado/suroriente/medellin/m2-desde-450
-- https://www.fincaraiz.com.co/arriendo/casas/el-poblado/suroriente/medellin/m2-desde-450
 - https://www.fincaraiz.com.co/arriendo/edificios/el-poblado/suroriente/medellin
 - https://www.fincaraiz.com.co/arriendo/locales/manila/suroriente/medellin/m2-desde-450
 - https://www.fincaraiz.com.co/arriendo/locales/provenza/suroriente/medellin/m2-desde-450
 - https://www.fincaraiz.com.co/arriendo/locales/ciudad-del-rio/suroriente/medellin/m2-desde-450
 - https://www.fincaraiz.com.co/arriendo/locales/envigado/antioquia/m2-desde-450
 - https://www.fincaraiz.com.co/arriendo/bodegas/envigado/antioquia/m2-desde-450
-- https://www.fincaraiz.com.co/arriendo/casas/envigado/antioquia/m2-desde-450
 - https://www.fincaraiz.com.co/venta/edificios/el-poblado/suroriente/medellin/m2-desde-450
 - https://www.fincaraiz.com.co/venta/edificios/envigado/antioquia/m2-desde-450
 

@@ -21,6 +21,22 @@ _BUILDING_COMMERCIAL = _CASA_COMMERCIAL + [r"\bhotel\b", r"licencia hotelera", r
                                            r"espacio comercial", r"\boficinas\b", r"\blocales\b"]
 _RESIDENTIAL = ["apartamentos", "apartaestudios", "airbnb", "renta turistica",
                 "conjunto de 2 casas", "vivienda", "unifamiliar", "residencial"]
+# Sauna / plunge feasibility. Exclude only on EXPLICIT evidence the space can't take
+# water + heat; listings rarely say, so soft risks are warnings, not exclusions.
+# (Structured "0 bathrooms" is a missing field on these portals, so it's never used.)
+_NO_WET_USE = [
+    (r"sin (bano|banos|agua|puntos? de agua|servicios sanitarios|unidad sanitaria)\b"
+     r"|no (tiene|cuenta con) (bano|banos|agua)", "no water / bathroom"),
+    (r"(solo|unicamente|exclusivamente) (para )?(oficina|oficinas|bodegaje|almacenamiento)"
+     r"|uso exclusivo (de |para )?(oficina|oficinas|bodegaje|almacenamiento)"
+     r"|no se permiten? (restaurantes|actividades|comida|cocinas)|no apto para (restaurante|gimnasio|spa)",
+     "use restricted (offices/storage only)"),
+    (r"\bmini ?bodega|self ?storage|\bkiosk|\bkiosco|\bisla comercial|\bmodulo comercial",
+     "storage unit / kiosk"),
+    (r"(dentro del|al interior del|ubicado en el|en el interior del|local en el) (centro comercial|c\.?c\.? )",
+     "inside a mall (wet/heat uses usually barred)"),
+]
+_WET_READY = r"\bduchas?\b|puntos? hidraulic|desague|sifon|trampa de grasa|puntos? de agua|red hidraulica|tanque de agua|vestier|\bbanos? (completos?|con ducha)"
 _MULTI_LEVEL = ["niveles", "pisos", "segundo piso", "2 pisos", "3 pisos", "mezzanine", "mezanine", "rooftop", "azotea"]
 
 
@@ -73,6 +89,9 @@ def apply_hard_filter(listing: Listing, hard: dict) -> tuple[list, bool]:
             and not any(re.search(k, hay) for k in _BUILDING_COMMERCIAL)
             and any(k in hay for k in _RESIDENTIAL)):
         fails.append("residential building")
+    for pat, why in _NO_WET_USE:
+        if re.search(pat, hay):
+            fails.append(f"can't host sauna/plunges: {why}")
     if listing.deal not in hard["include_deals"]:
         fails.append(f"deal '{listing.deal}' excluded")
 
@@ -119,6 +138,8 @@ def score_listing(listing: Listing, cfg: dict) -> tuple[int, list]:
         if name == "parking":
             hit = (listing.garages or 0) >= 4 or bool(
                 re.search(r"\b([4-9]|\d{2,})\s*(parqueaderos|parqueadero|garajes|celdas)", hay))
+        elif name == "wet_ready":
+            hit = bool(re.search(_WET_READY, hay))
         elif name == "value_vs_benchmark":
             # meaningful only if clearly cheaper: ≥25% under the benchmark's COP/m²
             hit = listing.deal == "arriendo" and 0 < listing.cop_per_m2 <= bench_m2 * 0.75
@@ -157,6 +178,11 @@ def process(listing: Listing, cfg: dict) -> Listing:
     if ("ascensor" not in hay and "elevador" not in hay
             and (listing.property_type in ("edificio", "casa") or any(k in hay for k in _MULTI_LEVEL))):
         listing.notes.append("multi-level, no elevator mentioned (Ley 361)")
+
+    if (listing.floor or 0) >= 3 or re.search(r"\b(tercer|cuarto|quinto) piso", hay):
+        listing.notes.append("upper floor — plunge drainage + slab load + Ley 361 to check")
+    if re.search(r"\bsotano", hay):
+        listing.notes.append("has a basement — drainage below sewer level needs pumps")
 
     listing.hard_fails, near = apply_hard_filter(listing, hard)
     listing._near_miss = near

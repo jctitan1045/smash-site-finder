@@ -19,9 +19,9 @@ hard:
   # angle, ranked on price per m². Set a number here to cap them too.
   max_sale_cop: null
 
-  # COMMERCIAL ONLY. Casas pass only if the listing states commercial/mixed use;
-  # edificios with residential markers (apartments, Airbnb) need a commercial one.
-  include_types: ["local", "bodega", "casa", "edificio"]
+  # COMMERCIAL ONLY, no houses at all (Jordan, 2026-10-21) — even "casa comercial".
+  # Edificios with residential markers (apartments, Airbnb) need a commercial one.
+  include_types: ["local", "bodega", "edificio"]
   include_deals: ["arriendo", "venta"]
   allowed_cities: ["medellin", "envigado"]
 
@@ -62,7 +62,7 @@ areas:
 
 # Any listing whose barrio matches one of these is dropped, whatever the area.
 # Upper Vía Las Palmas: not walkable, the roadmap says dodge it.
-exclude_tokens: ["las palmas", "via las palmas", "alto de las palmas", "palmas"]
+exclude_tokens: ["las palmas", "via las palmas", "alto de las palmas", "palmas", "itagui", "sabaneta", "la estrella"]
 
 # ---- SCORING: how well a space fits the Smash program ----------------------
 # Matched against title + description + amenities (accent-stripped), WHOLE WORDS.
@@ -84,6 +84,7 @@ scoring:
   whole_building:       {points: 6,  any: ["edificio completo", "edificio comercial", "casa comercial", "varios niveles", "3 niveles", "tres niveles", "dos niveles", "2 niveles"], flag: "Whole / independent building"}
   green_view:           {points: 5,  any: ["parque", "zona verde", "arboles", "naturaleza", "quebrada", "vista al parque", "vista a la ciudad"], flag: "Green / view"}
   traffic:              {points: 5,  any: ["alto trafico", "alto flujo", "via principal", "avenida", "corredor", "zona rosa", "milla de oro"], flag: "High-traffic location"}
+  wet_ready:            {points: 8,  any: [], flag: "Showers / plumbing / drains"}   # computed
   value_vs_benchmark:   {points: 10, any: [], flag: "≥25% cheaper per m² than Cra 47B"}  # computed
 
 # ---- SCRAPE SOURCES -------------------------------------------------------
@@ -96,7 +97,6 @@ sources:
     searches:
       - "arriendo/locales/el-poblado/suroriente/medellin/m2-desde-450"
       - "arriendo/bodegas/el-poblado/suroriente/medellin/m2-desde-450"
-      - "arriendo/casas/el-poblado/suroriente/medellin/m2-desde-450"
       - "arriendo/edificios/el-poblado/suroriente/medellin"
       - "arriendo/locales/manila/suroriente/medellin/m2-desde-450"
       - "arriendo/locales/provenza/suroriente/medellin/m2-desde-450"
@@ -104,7 +104,6 @@ sources:
       - "arriendo/bodegas/ciudad-del-rio/suroriente/medellin/m2-desde-450"
       - "arriendo/locales/envigado/antioquia/m2-desde-450"
       - "arriendo/bodegas/envigado/antioquia/m2-desde-450"
-      - "arriendo/casas/envigado/antioquia/m2-desde-450"
       - "arriendo/edificios/envigado/antioquia"
       - "venta/edificios/el-poblado/suroriente/medellin/m2-desde-450"
       - "venta/edificios/envigado/antioquia/m2-desde-450"
@@ -123,7 +122,6 @@ sources:
     searches:
       - "arriendo/locales/medellin/el-poblado"
       - "arriendo/bodegas/medellin/el-poblado"
-      - "arriendo/casas/medellin/el-poblado"
       - "arriendo/edificios/medellin"
       - "arriendo/locales/envigado"
       - "arriendo/bodegas/envigado"

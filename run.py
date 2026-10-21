@@ -121,6 +121,10 @@ def rescore(cfg: dict):
         l.notes, l.hard_fails, l.score_flags = [], [], []
         if l.source != "manual":
             l.iva_included = None
+            l.area_key = pipeline.match_area(l.neighborhood, l.city, cfg["areas"],
+                                             cfg.get("exclude_tokens")) or ""
+            if not l.area_key:
+                continue                          # area now excluded by config
         pipeline.process(l, cfg)
         listings.append(l)
     keep = [l for l in listings if l.benchmark or l.source == "manual" or not l.hard_fails]
