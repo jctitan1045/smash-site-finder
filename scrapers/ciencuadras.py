@@ -8,6 +8,7 @@ survivors. No size filter in the URL, so the list crawl is the long part.
 """
 from __future__ import annotations
 
+import base64
 import json
 import re
 from urllib.parse import urlparse
@@ -17,6 +18,20 @@ from .http import get, polite_sleep
 
 BASE = "https://www.ciencuadras.com"
 _JSON_RE = re.compile(r'<script[^>]*type="application/json"[^>]*>(.*?)</script>', re.S)
+
+
+_S3 = "https://www-img-cc.s3.amazonaws.com/"
+
+
+def _img(url: str) -> str:
+    """Ciencuadras' S3 bucket 403s direct requests; their own pages load photos
+    through images.ciencuadras.com, an image handler keyed by base64 JSON."""
+    if not url or not url.startswith(_S3):
+        return url
+    spec = {"bucket": "www-img-cc", "key": url[len(_S3):],
+            "edits": {"resize": {"width": 1036, "height": 776, "fit": "cover"}}}
+    return "https://images.ciencuadras.com/" + base64.b64encode(
+        json.dumps(spec, separators=(",", ":")).encode()).decode()
 
 
 def _decode_state(html: str) -> dict | None:
@@ -60,8 +75,8 @@ def _list_to_listing(raw: dict, deal: str) -> Listing | None:
         garages=parse_int(raw.get("garages")),
         lat=coord.get("latitude"),
         lng=coord.get("longitude"),
-        image=raw.get("image", "") or "",
-        images=[raw["image"]] if raw.get("image") else [],
+        image=_img(raw.get("image", "") or ""),
+        images=[_img(raw["image"])] if raw.get("image") else [],
         contact_name=raw.get("userName", "") or "",
         contact_phone=clean_phone(raw.get("contactPhone")),
         contact_whatsapp=wa_number(raw.get("contactPhone")),
@@ -100,7 +115,7 @@ def _enrich(listing: Listing) -> None:
         amen.append("Ascensor")
     listing.amenities = amen
 
-    gallery = [p.get("url") for p in ((detail.get("galleryData") or {}).get("flatPhotos") or [])
+    gallery = [_img(p.get("url")) for p in ((detail.get("galleryData") or {}).get("flatPhotos") or [])
                if p.get("url")]
     if gallery:
         listing.images = gallery[:12]

@@ -147,6 +147,11 @@ _TEMPLATE = r"""<!DOCTYPE html>
   .pop .pp{font-weight:700;font-size:14px}
   .pop .pm{color:#5d6966;font-size:12px;margin:2px 0 6px}
   .pop a{color:#2f6b4f;font-weight:600;text-decoration:none}
+  .types{font-size:13px;color:var(--muted);margin-top:6px;max-width:760px}
+  .types summary{cursor:pointer;color:var(--accent);font-weight:600}
+  .types p{margin:6px 0}
+  .nophoto{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+           color:var(--muted);font-size:13px}
   footer{max-width:1180px;margin:0 auto;padding:8px 16px 40px;color:var(--muted);font-size:12px}
 </style>
 </head>
@@ -156,6 +161,15 @@ _TEMPLATE = r"""<!DOCTYPE html>
   <div class="sub"><span id="stat-count"></span> · <b id="stat-new"></b>
     · <span id="stat-saved">0 saved</span> · <span id="stat-hidden"></span> · updated __GENERATED__</div>
   <div class="sub" id="rules"></div>
+  <details class="types"><summary>What the types mean</summary>
+    <p><b>Local</b>: a shop-style commercial space, usually ground floor with a street front
+      (retail, restaurant, gym, showroom). Closest to a "storefront".</p>
+    <p><b>Bodega</b>: literally "warehouse", but in Poblado/Envigado it usually means a large open
+      commercial box: high ceilings, few walls, truck door, often industrial power. Rawer and cheaper
+      per m², more build-out needed, but the easiest shell for a gym + sauna floor.</p>
+    <p><b>Edificio</b>: a whole building, all floors (like Cra 47B). Often a former office block,
+      hotel or mixed-use. Most are for sale; the ones for rent give you the whole stack.</p>
+  </details>
 </header>
 <div class="bar">
   <button id="savedBtn">★ Saved (<span id="savedN">0</span>)</button>
@@ -292,6 +306,7 @@ function render(){
       .map(n=>`<div class="note">⚠️ ${n}</div>`).join('');
     const isSaved=!!saved[d.uid], wa=waLink(d);
     el.innerHTML=`<div class="thumb" data-uid="${d.uid}" data-idx="0" ${gal.length?`style="background-image:url('${gal[0]}')"`:''}>
+        ${gal.length?'':'<span class="nophoto">No photos posted. Open the listing</span>'}
         <div class="badges">${badges}</div><span class="src">${d.source}</span>${nav}</div>
       <div class="body">
         ${d.label?`<div class="label">${d.label}</div>`:''}
