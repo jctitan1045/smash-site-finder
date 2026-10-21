@@ -1,7 +1,7 @@
 # TODOS — Smash Site Finder
 
 ## Next
-- Decide hosting: GitHub Pages (public repo, noindex, like the apartment finder) vs private.
+- ~~Hosting~~ done: live at jctitan1045.github.io/smash-site-finder (public repo, noindex).
 - Set up the Grok task from GROK_TASK.md; route its links into data/manual.yaml.
 
 ## Soon
