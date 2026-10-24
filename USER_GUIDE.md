@@ -19,3 +19,7 @@ weights, search URLs.
 **Hide listings for good server-side:** "Hidden" export → save as `data/rejected.json`.
 
 **Grok daily scout:** paste `GROK_TASK.md` (below the line) into Grok → Tasks, daily 7:00.
+
+**Lobbie:** found automatically. The daily run walks new listing numbers since the last run and
+keeps only locales/bodegas/edificios in Medellín/Envigado. Re-backfill from an id:
+`python -m scrapers.lobbie 401000`. Pasting a Lobbie link in manual.yaml still works.

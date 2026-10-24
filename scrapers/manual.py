@@ -64,7 +64,7 @@ def _parse_lobbie(url: str, html: str) -> Listing:
         source="manual", source_id="lobbie-" + sid, url=url, title=title, deal=deal,
         property_type=normalize_type(title),
         neighborhood=loc.group(1).strip() if loc else "",
-        city=loc.group(2) if loc else "Medellín",
+        city=loc.group(2) if loc else "",        # never default: Lobbie is multi-country
         price_rent=(price or 0) if deal == "arriendo" else 0,
         price_sale=(price or 0) if deal == "venta" else 0,
         area_m2=m2, stratum=stratum,

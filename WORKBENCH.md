@@ -26,3 +26,12 @@
   floor 3+ (15) and basement (8) = warnings. Portal "0 bathrooms" = missing field (Provenza bldg
   "0" lists 13 baños), so never used. Showers/plumbing/drains = +8. Itagüí/Sabaneta/La Estrella
   excluded (2 Itagüí leaked). CI fix: pull --rebase -X theirs before push. Board: 122 + 15.
+
+## 2026-10-22 — Lobbie as a source
+- No index, not in search engines, no API (server-rendered). But the short code is base62 of a
+  sequential id (1hGm = 404660; alphabet 0-9A-Za-z). Frontier ~406,033 on 2026-10-22; ~1/3 of ids
+  live (deleted ones leave gaps); multi-country (Puebla MX at #404700).
+- robots.txt: Allow all. Terms page not reachable (SPA returns the homepage).
+- Built scrapers/lobbie.py: daily walk from cursor until 200 misses, ~1 req/s; keep commercial
+  COP listings in our cities; re-check kept ones daily. Backfill from #401000 run once locally.
+- Fix: Lobbie parser no longer defaults city to Medellín (foreign listings slipped through).

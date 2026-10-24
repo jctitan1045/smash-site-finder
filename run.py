@@ -23,7 +23,7 @@ from core import pipeline, store
 import dataclasses
 
 from core.models import Listing
-from scrapers import fincaraiz, ciencuadras, metrocuadrado, manual
+from scrapers import fincaraiz, ciencuadras, metrocuadrado, manual, lobbie
 from dashboard import build as dashboard
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.yaml")
@@ -60,12 +60,18 @@ def collect(cfg: dict) -> list[Listing]:
         print("→ Ciencuadras")
         out += ciencuadras.scrape(
             cfg, lambda n, c, a: pipeline.match_area(n, c, a, cfg.get("exclude_tokens")))
+    manual_urls: set[str] = set()
     if src["manual"].get("enabled"):
         print("→ Manual links")
         for l in manual.scrape(cfg):          # manual entries are always kept
             l.area_key = l.area_key or pipeline.match_area(
                 l.neighborhood, l.city, cfg["areas"], cfg.get("exclude_tokens")) or "other"
+            manual_urls.add(l.url.split("?")[0])
             out.append(l)
+    if src.get("lobbie", {}).get("enabled"):
+        print("→ Lobbie (new ids)")
+        lb = [l for l in lobbie.scrape(cfg) if l.url.split("?")[0] not in manual_urls]
+        out += _area_match(lb, cfg, "lobbie")
 
     unique: dict[str, Listing] = {}
     for l in out:
