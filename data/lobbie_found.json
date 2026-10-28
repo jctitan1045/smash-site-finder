@@ -333,5 +333,15 @@
   "url": "https://app.lobbieapp.com/inmueble/1icy",
   "first_seen": "2026-10-22",
   "title": "Local en venta"
+ },
+ "410101": {
+  "url": "https://app.lobbieapp.com/inmueble/1igX",
+  "first_seen": "2026-10-28",
+  "title": "Bodega en venta"
+ },
+ "410115": {
+  "url": "https://app.lobbieapp.com/inmueble/1igl",
+  "first_seen": "2026-10-28",
+  "title": "Local en arriendo"
  }
 }
