@@ -119,11 +119,6 @@
   "first_seen": "2026-10-22",
   "title": "Bodega en venta"
  },
- "408585": {
-  "url": "https://app.lobbieapp.com/inmueble/1iI5",
-  "first_seen": "2026-10-22",
-  "title": "Bodega en arriendo"
- },
  "408586": {
   "url": "https://app.lobbieapp.com/inmueble/1iI6",
   "first_seen": "2026-10-22",
@@ -203,5 +198,15 @@
   "url": "https://app.lobbieapp.com/inmueble/1ilQ",
   "first_seen": "2026-11-18",
   "title": "Bodega en venta"
+ },
+ "410541": {
+  "url": "https://app.lobbieapp.com/inmueble/1ind",
+  "first_seen": "2026-11-27",
+  "title": "Edificio en venta"
+ },
+ "410553": {
+  "url": "https://app.lobbieapp.com/inmueble/1inp",
+  "first_seen": "2026-11-27",
+  "title": "Local en venta"
  }
 }
